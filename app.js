@@ -1,28 +1,28 @@
 const SAMPLE_FIELDS = [
   { label: "Name as per PAN Card:", value: "" },
-  { label: "Total years of Exp:", value: "" },
-  { label: "Relevant Exp:", value: "" },
+  { label: "Total years of Exp:", value: " Years" },
+  { label: "Relevant Exp:", value: " Years" },
   { label: "Mobile No:", value: "" },
   { label: "Email ID:", value: "" },
   { label: "Current Company:", value: "" },
   { label: "Highest Academic Qualification:", value: "" },
   { label: "Notice period:", value: "" },
   { label: "Current Location:", value: "" },
-  { label: "Comfortable to Relocate (Yes/No):", value: "" },
-  { label: "Comfortable For Shift (Yes/No):", value: "" },
+  { label: "Comfortable to Relocate (Yes/No):", value: "Yes " },
+  { label: "Comfortable For Shift (Yes/No):", value: "Yes" },
   {
     label:
       "Has the candidate worked with BNP Paribas India Solutions or any other BNP Paribas Group Company or subsidiary before? – Yes / No (If yes, please provide the details). Kindly share UID",
-    value: "",
+    value: "No",
   },
   {
     label:
       "Close Business Relationship – is candidate related to anybody at BNP Paribas or any BNPP group organizations?",
-    value: "",
+    value: "No",
   },
   {
     label: "Identity of the candidate checked on video and captured? - Yes or No",
-    value: "",
+    value: "Yes",
   },
   {
     label:
@@ -34,9 +34,9 @@ const SAMPLE_FIELDS = [
       "Rating for the skills required for the request (Provide rate as 1 - Least & 5 - Highest rating)",
     value: "",
   },
-  { label: "Primary Skill: SQL, Python, Power BI", value: "4 out of 5" },
+  { label: "Primary Skill:", value: "4 out of 5" },
   {
-    label: "Secondary Skill: Statistical Model, Predictive Modelling, AWS",
+    label: "Secondary Skill:",
     value: "4 out of 5",
   },
   { label: "Communication Skills :", value: "4 out of 5" },
