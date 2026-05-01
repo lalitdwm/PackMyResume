@@ -18,7 +18,6 @@
             merged PDF. Everything runs inside the browser.
           </p>
         </div>
-        <button class="primary-button" id="generate-button" type="button">Generate PDF</button>
       </section>
 
       <section class="stack-layout">
@@ -28,6 +27,9 @@
             Paste a 2-column table directly, or type details in label/value format. The preview and
             input stay synchronized.
           </p>
+          <div class="input-toolbar">
+            <button class="secondary-button" id="clear-input-button" type="button">Clear Input</button>
+          </div>
           <div
             class="details-input rich-details-input"
             id="details-input"
@@ -44,7 +46,15 @@
               <input id="resume-input" type="file" accept="application/pdf" />
             </label>
           </div>
-          <p class="status-message" id="status-message"></p>
+          <div class="action-bar">
+            <div class="left-actions">
+              <button class="secondary-button" id="clear-button" type="button">Reset</button>
+            </div>
+            <div class="action-group">
+              <p class="status-message" id="status-message"></p>
+              <button class="primary-button" id="generate-button" type="button">Download PDF</button>
+            </div>
+          </div>
         </div>
 
         <div class="panel preview-panel">

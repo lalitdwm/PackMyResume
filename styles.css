@@ -92,6 +92,16 @@ code {
   box-shadow: 0 12px 30px rgba(194, 65, 12, 0.28);
 }
 
+.secondary-button {
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  font-weight: 700;
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
 .stack-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -103,7 +113,8 @@ code {
 }
 
 .input-panel {
-  max-width: 920px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .panel h2 {
@@ -150,10 +161,38 @@ code {
   min-width: 120px;
 }
 
+.input-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0 8px;
+}
+
 .file-stack {
   display: grid;
   gap: 14px;
   margin-top: 18px;
+}
+
+.action-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.left-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.action-group {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 12px;
+  flex: 1;
 }
 
 .file-input {
@@ -170,10 +209,12 @@ code {
 }
 
 .status-message {
-  margin: 16px 0 0;
+  margin: 0;
   padding: 12px 14px;
   border-radius: 14px;
   font-weight: 600;
+  min-height: 48px;
+  flex: 1;
 }
 
 .status-working {
@@ -193,6 +234,8 @@ code {
 
 .preview-panel {
   overflow: hidden;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .preview-sheet {
@@ -323,5 +366,12 @@ code {
 
   .hero-card {
     align-items: start;
+  }
+
+  .action-bar,
+  .left-actions,
+  .action-group {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

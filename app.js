@@ -65,6 +65,8 @@ let detailsInput;
 let imageInput;
 let resumeInput;
 let generateButton;
+let clearButton;
+let clearInputButton;
 let statusMessage;
 let previewTable;
 let previewImage;
@@ -88,6 +90,8 @@ function initApp() {
   imageInput = document.getElementById("image-input");
   resumeInput = document.getElementById("resume-input");
   generateButton = document.getElementById("generate-button");
+  clearButton = document.getElementById("clear-button");
+  clearInputButton = document.getElementById("clear-input-button");
   statusMessage = document.getElementById("status-message");
   previewTable = document.getElementById("preview-table");
   previewImage = document.getElementById("preview-image");
@@ -98,6 +102,8 @@ function initApp() {
     !imageInput ||
     !resumeInput ||
     !generateButton ||
+    !clearButton ||
+    !clearInputButton ||
     !statusMessage ||
     !previewTable ||
     !previewImage ||
@@ -113,6 +119,8 @@ function initApp() {
   detailsInput.addEventListener("input", renderPreview);
   imageInput.addEventListener("change", handleImageChange);
   generateButton.addEventListener("click", handleGeneratePdf);
+  clearButton.addEventListener("click", handleClearDetails);
+  clearInputButton.addEventListener("click", handleClearInput);
 
   if (typeof window.PDFLib === "undefined") {
     setStatus(
@@ -329,6 +337,33 @@ function handleImageChange() {
   previewImage.src = imageObjectUrl;
   previewImage.hidden = false;
   imagePlaceholder.hidden = true;
+}
+
+function handleClearDetails() {
+  const shouldClear = window.confirm("Reset the input table back to the default template?");
+  if (!shouldClear) {
+    return;
+  }
+
+  currentFields = SAMPLE_FIELDS.map((field) => ({
+    label: field.label,
+    value: field.value ? "" : "",
+  }));
+  syncRichInputFromFields();
+  renderPreview();
+  setStatus("success", "Template reset to default.");
+}
+
+function handleClearInput() {
+  const shouldClear = window.confirm("Clear all rows from the input table?");
+  if (!shouldClear) {
+    return;
+  }
+
+  currentFields = [];
+  syncRichInputFromFields();
+  renderPreview();
+  setStatus("success", "Input table cleared.");
 }
 
 function setStatus(type, message) {
