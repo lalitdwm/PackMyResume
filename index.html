@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RecPDF</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero-card">
+        <div>
+          <p class="eyebrow">Frontend-only Resume Composer</p>
+          <h1>Build a candidate profile cover page and append the resume PDF.</h1>
+          <p class="hero-copy">
+            Paste the candidate details, choose an image, upload the resume, and download one
+            merged PDF. Everything runs inside the browser.
+          </p>
+        </div>
+        <button class="primary-button" id="generate-button" type="button">Generate PDF</button>
+      </section>
+
+      <section class="stack-layout">
+        <div class="panel input-panel">
+          <h2>Candidate Details</h2>
+          <p class="panel-copy">
+            Paste a 2-column table directly, or type details in label/value format. The preview and
+            input stay synchronized.
+          </p>
+          <div
+            class="details-input rich-details-input"
+            id="details-input"
+            contenteditable="true"
+            spellcheck="false"
+          ></div>
+          <div class="file-stack">
+            <label class="file-input">
+              <span>Candidate Image</span>
+              <input id="image-input" type="file" accept="image/png,image/jpeg" />
+            </label>
+            <label class="file-input">
+              <span>Resume PDF</span>
+              <input id="resume-input" type="file" accept="application/pdf" />
+            </label>
+          </div>
+          <p class="status-message" id="status-message"></p>
+        </div>
+
+        <div class="panel preview-panel">
+          <h2>Page 1 Preview</h2>
+          <div class="preview-sheet">
+            <div class="preview-table" id="preview-table"></div>
+            <div class="preview-image-wrap">
+              <img class="preview-image" id="preview-image" alt="Candidate preview" hidden />
+              <div class="image-placeholder" id="image-placeholder">Candidate image appears here</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
