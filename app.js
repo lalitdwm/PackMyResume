@@ -57,7 +57,7 @@ const VALUE_FONT_SIZE = 10.5;
 const LABEL_LINE_HEIGHT = 13;
 const VALUE_LINE_HEIGHT = 13;
 const ROW_PADDING_Y = 4;
-const ROW_PADDING_X = 3;
+const ROW_PADDING_X = 4;
 const IMAGE_MAX_WIDTH = 180;
 const IMAGE_MAX_HEIGHT = 180;
 
@@ -315,6 +315,10 @@ function buildRichInputHtml(fields) {
 
   return `
     <table class="rich-input-table">
+      <colgroup>
+        <col class="rich-input-col-label" />
+        <col class="rich-input-col-value" />
+      </colgroup>
       <tbody>${rows}</tbody>
     </table>
   `;

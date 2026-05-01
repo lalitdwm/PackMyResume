@@ -1,5 +1,12 @@
 :root {
   color: #111827;
+  --table-label-col-share: 72%;
+  --table-value-col-share: 28%;
+  --table-cell-padding-y: 4px;
+  --table-cell-padding-x: 4px;
+  --table-border-color: #000;
+  --table-border-width: 1px;
+  --table-cell-font-size: 0.9rem;
   background:
     radial-gradient(circle at top, rgba(255, 243, 214, 0.7), transparent 30%),
     linear-gradient(180deg, #f6f7fb 0%, #eceff6 100%);
@@ -152,14 +159,28 @@ code {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
+  table-layout: fixed;
+  border: var(--table-border-width) solid var(--table-border-color);
+}
+
+.rich-details-input .rich-input-col-label {
+  width: var(--table-label-col-share);
+}
+
+.rich-details-input .rich-input-col-value {
+  width: var(--table-value-col-share);
 }
 
 .rich-details-input .rich-input-table td,
 .rich-details-input .rich-input-table th {
-  border: 1px solid #cbd5e1;
-  padding: 8px 10px;
+  border: var(--table-border-width) solid var(--table-border-color);
+  padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
   vertical-align: top;
-  min-width: 120px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  font-size: var(--table-cell-font-size);
+  line-height: 1.35;
+  color: #000;
 }
 
 .input-toolbar {
@@ -269,17 +290,17 @@ code {
   display: grid;
   gap: 0;
   align-content: start;
-  border: 1px solid #000;
+  border: var(--table-border-width) solid var(--table-border-color);
   background: #fff;
 }
 
 .field-row {
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: var(--table-label-col-share) var(--table-value-col-share);
   gap: 0;
   align-items: start;
   background: #fff;
-  border-bottom: 1px solid #000;
+  border-bottom: var(--table-border-width) solid var(--table-border-color);
   position: relative;
 }
 
@@ -288,27 +309,29 @@ code {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 72%;
-  width: 1px;
-  background: #000;
+  left: var(--table-label-col-share);
+  width: var(--table-border-width);
+  background: var(--table-border-color);
+  transform: translateX(calc(var(--table-border-width) * -0.5));
 }
 
 .field-label,
 .field-value {
   word-break: break-word;
-  padding: 4px 4px;
+  padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
   min-height: 30px;
   display: flex;
   align-items: flex-start;
 }
 
 .field-label {
-  font-size: 0.9rem;
+  font-size: var(--table-cell-font-size);
   color: #000;
   font-weight: 400;
 }
 
 .field-value {
+  font-size: var(--table-cell-font-size);
   color: #000;
   font-weight: 400;
 }
@@ -357,7 +380,6 @@ code {
   max-width: min(220px, 70%);
   max-height: 210px;
   object-fit: contain;
-  border-radius: 18px;
   box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
 }
 
