@@ -74,6 +74,7 @@ let imagePlaceholder;
 let imageObjectUrl = "";
 let currentFields = [];
 let isSyncingRichInput = false;
+let statusTimeoutId = null;
 
 window.addEventListener("DOMContentLoaded", initApp);
 window.addEventListener("error", (event) => {
@@ -118,6 +119,8 @@ function initApp() {
 
   detailsInput.addEventListener("input", renderPreview);
   imageInput.addEventListener("change", handleImageChange);
+  imageInput.addEventListener("change", handleFileSelectionState);
+  resumeInput.addEventListener("change", handleFileSelectionState);
   generateButton.addEventListener("click", handleGeneratePdf);
   clearButton.addEventListener("click", handleClearDetails);
   clearInputButton.addEventListener("click", handleClearInput);
@@ -247,22 +250,24 @@ function renderFieldColumn(container, fields) {
     const row = document.createElement("article");
     row.className = "field-row";
 
-    const labelCell = document.createElement("input");
+    const labelCell = document.createElement("textarea");
     labelCell.className = "field-label field-edit-input";
-    labelCell.type = "text";
     labelCell.value = field.label;
+    labelCell.rows = 1;
     labelCell.addEventListener("input", (event) => {
+      resizeEditor(event.target);
       currentFields = currentFields.map((entry, index) =>
         index === fieldIndex ? { ...entry, label: event.target.value } : entry
       );
       syncDetailsTextFromFields();
     });
 
-    const valueCell = document.createElement("input");
+    const valueCell = document.createElement("textarea");
     valueCell.className = "field-value field-edit-input";
-    valueCell.type = "text";
     valueCell.value = field.value || "";
+    valueCell.rows = 1;
     valueCell.addEventListener("input", (event) => {
+      resizeEditor(event.target);
       currentFields = currentFields.map((entry, index) =>
         index === fieldIndex ? { ...entry, value: event.target.value } : entry
       );
@@ -272,7 +277,14 @@ function renderFieldColumn(container, fields) {
     row.appendChild(labelCell);
     row.appendChild(valueCell);
     container.appendChild(row);
+    resizeEditor(labelCell);
+    resizeEditor(valueCell);
   });
+}
+
+function resizeEditor(element) {
+  element.style.height = "auto";
+  element.style.height = `${element.scrollHeight}px`;
 }
 
 function syncDetailsTextFromFields() {
@@ -339,6 +351,20 @@ function handleImageChange() {
   imagePlaceholder.hidden = true;
 }
 
+function handleFileSelectionState(event) {
+  const input = event.target;
+  const wrapper = input.closest(".file-input");
+  if (!wrapper) {
+    return;
+  }
+
+  if (input.files && input.files.length > 0) {
+    wrapper.classList.add("file-input-selected");
+  } else {
+    wrapper.classList.remove("file-input-selected");
+  }
+}
+
 function handleClearDetails() {
   const shouldClear = window.confirm("Reset the input table back to the default template?");
   if (!shouldClear) {
@@ -371,8 +397,21 @@ function setStatus(type, message) {
     return;
   }
 
+  if (statusTimeoutId) {
+    window.clearTimeout(statusTimeoutId);
+    statusTimeoutId = null;
+  }
+
   statusMessage.textContent = message;
   statusMessage.className = `status-message status-${type}`;
+
+  if (message && type !== "error") {
+    statusTimeoutId = window.setTimeout(() => {
+      statusMessage.textContent = "";
+      statusMessage.className = "status-message";
+      statusTimeoutId = null;
+    }, 3000);
+  }
 }
 
 function wrapText(text, font, size, maxWidth) {
@@ -617,7 +656,7 @@ async function handleGeneratePdf() {
     const downloadUrl = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = downloadUrl;
-    anchor.download = buildOutputName(resumeFile.name);
+    anchor.download = buildOutputName(fields);
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
@@ -629,7 +668,19 @@ async function handleGeneratePdf() {
   }
 }
 
-function buildOutputName(resumeName) {
-  const cleanName = resumeName.replace(/\.pdf$/i, "");
-  return `${cleanName}-merged.pdf`;
+function buildOutputName(fields) {
+  const name = findFieldValue(fields, "Name as per PAN Card") || "Candidate";
+  const location = findFieldValue(fields, "Current Location") || "Profile";
+  return `${sanitizeFilenamePart(name)}_${sanitizeFilenamePart(location)}.pdf`;
+}
+
+function findFieldValue(fields, labelPrefix) {
+  const match = fields.find((field) =>
+    normalizeCellText(field.label).toLowerCase().startsWith(labelPrefix.toLowerCase())
+  );
+  return match ? normalizeCellText(match.value) : "";
+}
+
+function sanitizeFilenamePart(value) {
+  return value.replace(/[<>:"/\\|?*\u0000-\u001f]/g, "").trim() || "Unknown";
 }
