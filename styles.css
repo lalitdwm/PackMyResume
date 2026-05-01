@@ -1,5 +1,6 @@
 :root {
   color: #111827;
+  --content-panel-width: 990px;
   --table-label-col-share: 72%;
   --table-value-col-share: 28%;
   --table-cell-padding-y: 4px;
@@ -60,6 +61,9 @@ code {
   gap: 24px;
   padding: 28px;
   margin-bottom: 24px;
+  width: min(100%, var(--content-panel-width));
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .eyebrow {
@@ -76,7 +80,7 @@ code {
   max-width: 100%;
   font-size: clamp(1.8rem, 3vw, 3rem);
   line-height: 1.05;
-  white-space: nowrap;
+  text-wrap: balance;
 }
 
 .hero-copy,
@@ -121,7 +125,7 @@ code {
 }
 
 .input-panel {
-  width: 100%;
+  width: min(100%, var(--content-panel-width));
   margin: 0 auto;
 }
 
@@ -268,14 +272,14 @@ code {
 
 .preview-panel {
   overflow: hidden;
-  width: 100%;
+  width: min(100%, var(--content-panel-width));
   margin: 0 auto;
 }
 
 .preview-sheet {
   aspect-ratio: 1 / 1.414;
-  width: min(100%, 820px);
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   border-radius: 22px;
   padding: 26px;

@@ -141,7 +141,7 @@ function initApp() {
     return;
   }
 
-  setStatus("success", "Ready. Add details, image, and resume PDF, then click Generate PDF.");
+  setStatus("success", "Ready. Add details, image, and resume PDF, then click Download PDF.");
 }
 
 function parseCandidateDetails(input) {
@@ -377,7 +377,7 @@ function handleClearDetails() {
 
   currentFields = SAMPLE_FIELDS.map((field) => ({
     label: field.label,
-    value: field.value ? "" : "",
+    value: field.value,
   }));
   syncRichInputFromFields();
   renderPreview();
