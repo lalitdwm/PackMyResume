@@ -23,20 +23,24 @@
 
       <section class="stack-layout">
         <div class="panel input-panel">
-          <h2>Candidate Details</h2>
+          <div class="panel-header">
+            <h2>Candidate Details</h2>
+          </div>
           <p class="panel-copy">
             Paste a 2-column table directly, or type details in label/value format. The preview and
             input stay synchronized. Your details remain in the browser session only and are not
             stored by the app.
           </p>
-          <div
-            class="details-input rich-details-input"
-            id="details-input"
-            contenteditable="true"
-            spellcheck="false"
-          ></div>
-          <div class="input-toolbar">
-            <button class="secondary-button" id="clear-input-button" type="button">Clear Input</button>
+          <div class="details-input-wrapper">
+            <div
+              class="rich-details-input-area"
+              id="details-input"
+              contenteditable="true"
+              spellcheck="false"
+            ></div>
+            <div class="input-toolbar">
+              <button class="secondary-button" id="clear-input-button" type="button">Clear Input</button>
+            </div>
           </div>
           <div class="file-stack">
             <label class="file-input">
