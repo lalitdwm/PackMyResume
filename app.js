@@ -71,7 +71,10 @@ let statusMessage;
 let previewTable;
 let previewImage;
 let imagePlaceholder;
+let resumePreviewWrap;
+let resumePreviewFrame;
 let imageObjectUrl = "";
+let resumeObjectUrl = "";
 let currentFields = [];
 let isSyncingRichInput = false;
 let statusTimeoutId = null;
@@ -97,6 +100,8 @@ function initApp() {
   previewTable = document.getElementById("preview-table");
   previewImage = document.getElementById("preview-image");
   imagePlaceholder = document.getElementById("image-placeholder");
+  resumePreviewWrap = document.getElementById("resume-preview-wrap");
+  resumePreviewFrame = document.getElementById("resume-preview-frame");
 
   if (
     !detailsInput ||
@@ -108,7 +113,9 @@ function initApp() {
     !statusMessage ||
     !previewTable ||
     !previewImage ||
-    !imagePlaceholder
+    !imagePlaceholder ||
+    !resumePreviewWrap ||
+    !resumePreviewFrame
   ) {
     throw new Error("The app could not find all required page elements.");
   }
@@ -120,7 +127,7 @@ function initApp() {
   detailsInput.addEventListener("input", renderPreview);
   imageInput.addEventListener("change", handleImageChange);
   imageInput.addEventListener("change", handleFileSelectionState);
-  resumeInput.addEventListener("change", handleFileSelectionState);
+  resumeInput.addEventListener("change", handleResumeChange);
   generateButton.addEventListener("click", handleGeneratePdf);
   clearButton.addEventListener("click", handleClearDetails);
   clearInputButton.addEventListener("click", handleClearInput);
@@ -367,6 +374,26 @@ function handleFileSelectionState(event) {
   } else {
     wrapper.classList.remove("file-input-selected");
   }
+}
+
+function handleResumeChange(event) {
+  handleFileSelectionState(event);
+
+  if (resumeObjectUrl) {
+    URL.revokeObjectURL(resumeObjectUrl);
+    resumeObjectUrl = "";
+  }
+
+  const file = resumeInput.files && resumeInput.files[0];
+  if (!file) {
+    resumePreviewWrap.hidden = true;
+    resumePreviewFrame.removeAttribute("src");
+    return;
+  }
+
+  resumeObjectUrl = URL.createObjectURL(file);
+  resumePreviewFrame.src = `${resumeObjectUrl}#toolbar=0&navpanes=0&scrollbar=0&view=Fit`;
+  resumePreviewWrap.hidden = false;
 }
 
 function handleClearDetails() {

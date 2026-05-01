@@ -422,6 +422,26 @@ code {
   );
 }
 
+.resume-preview-wrap {
+  margin-top: 32px;
+}
+
+.resume-preview-title {
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.resume-preview-frame {
+  width: 100%;
+  aspect-ratio: 1 / 1.414;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  background: #f8fafc;
+  display: block;
+}
+
 @media (max-width: 900px) {
   .hero-card,
   .stack-layout {

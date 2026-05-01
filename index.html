@@ -64,12 +64,21 @@
         </div>
 
         <div class="panel preview-panel">
-          <h2>Page 1 Preview</h2>
-          <div class="preview-sheet">
-            <div class="preview-table" id="preview-table"></div>
-            <div class="preview-image-wrap">
-              <img class="preview-image" id="preview-image" alt="Candidate preview" hidden />
-              <div class="image-placeholder" id="image-placeholder">Candidate image appears here</div>
+          <h2>Preview</h2>
+          <div class="preview-container">
+            <div class="preview-sheet">
+              <div class="preview-table" id="preview-table"></div>
+              <div class="preview-image-wrap">
+                <img class="preview-image" id="preview-image" alt="Candidate preview" hidden />
+                <div class="image-placeholder" id="image-placeholder">Candidate image appears here</div>
+              </div>
+            </div>
+            
+            <div class="resume-preview-wrap" id="resume-preview-wrap" hidden>
+              <h3 class="resume-preview-title">Resume PDF</h3>
+              <div class="resume-preview-frame-container">
+                <iframe class="resume-preview-frame" id="resume-preview-frame" title="Resume preview"></iframe>
+              </div>
             </div>
           </div>
         </div>
