@@ -27,12 +27,12 @@ const SAMPLE_FIELDS = [
   {
     label:
       "*Note: Supplier will be expected to produce the screen capture for any internal audit or control review based on request",
-    value: "-",
+    value: "",
   },
   {
     label:
       "Rating for the skills required for the request (Provide rate as 1 - Least & 5 - Highest rating)",
-    value: "-",
+    value: "",
   },
   { label: "Primary Skill: SQL, Python, Power BI", value: "4 out of 5" },
   {
@@ -444,7 +444,7 @@ function wrapText(text, font, size, maxWidth) {
 
 function estimateFieldHeight(field, labelFont, valueFont) {
   const labelLines = wrapText(field.label, labelFont, LABEL_FONT_SIZE, LABEL_WIDTH);
-  const valueLines = wrapText(field.value || "-", valueFont, VALUE_FONT_SIZE, VALUE_WIDTH);
+  const valueLines = wrapText(field.value || "", valueFont, VALUE_FONT_SIZE, VALUE_WIDTH);
   return (
     Math.max(
       labelLines.length * LABEL_LINE_HEIGHT,
@@ -458,7 +458,7 @@ function drawFieldColumn(page, fields, x, startY, labelFont, valueFont) {
 
   fields.forEach((field) => {
     const labelLines = wrapText(field.label, labelFont, LABEL_FONT_SIZE, LABEL_WIDTH);
-    const valueLines = wrapText(field.value || "-", valueFont, VALUE_FONT_SIZE, VALUE_WIDTH);
+    const valueLines = wrapText(field.value || "", valueFont, VALUE_FONT_SIZE, VALUE_WIDTH);
     const contentHeight = Math.max(
       labelLines.length * LABEL_LINE_HEIGHT,
       valueLines.length * VALUE_LINE_HEIGHT
