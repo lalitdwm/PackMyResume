@@ -52,13 +52,17 @@
               <input id="resume-input" type="file" accept="application/pdf" />
             </label>
           </div>
+          <div class="status-container" style="margin-top: 18px; margin-bottom: 12px;">
+            <p class="status-message" id="status-message" hidden></p>
+          </div>
           <div class="action-bar">
-            <div class="left-actions">
-              <button class="secondary-button" id="clear-button" type="button">Reset</button>
+            <div class="action-left">
             </div>
-            <div class="action-group">
-              <p class="status-message" id="status-message"></p>
+            <div class="action-center">
               <button class="primary-button" id="generate-button" type="button">Download PDF</button>
+            </div>
+            <div class="action-right">
+              <button class="secondary-button" id="clear-button" type="button">Reset</button>
             </div>
           </div>
         </div>
@@ -78,6 +82,13 @@
               <div class="resume-preview-frame-container">
                 <iframe class="resume-preview-frame" id="resume-preview-frame" title="Resume preview"></iframe>
               </div>
+            </div>
+
+            <div class="status-container" style="margin-top: 32px; margin-bottom: 12px;">
+              <p class="status-message" id="status-message-bottom" hidden></p>
+            </div>
+            <div class="action-bar" style="display: flex; justify-content: center;">
+              <button class="primary-button" id="generate-button-bottom" type="button">Download PDF</button>
             </div>
           </div>
         </div>

@@ -80,6 +80,7 @@ let generateButton;
 let clearButton;
 let clearInputButton;
 let statusMessage;
+let statusMessageBottom;
 let previewTable;
 let previewImage;
 let imagePlaceholder;
@@ -109,6 +110,8 @@ function initApp() {
   clearButton = document.getElementById("clear-button");
   clearInputButton = document.getElementById("clear-input-button");
   statusMessage = document.getElementById("status-message");
+  statusMessageBottom = document.getElementById("status-message-bottom");
+  statusMessageBottom = document.getElementById("status-message-bottom");
   previewTable = document.getElementById("preview-table");
   previewImage = document.getElementById("preview-image");
   imagePlaceholder = document.getElementById("image-placeholder");
@@ -141,6 +144,7 @@ function initApp() {
   imageInput.addEventListener("change", handleFileSelectionState);
   resumeInput.addEventListener("change", handleResumeChange);
   generateButton.addEventListener("click", handleGeneratePdf);
+  document.getElementById("generate-button-bottom").addEventListener("click", handleGeneratePdf);
   clearButton.addEventListener("click", handleClearDetails);
   clearInputButton.addEventListener("click", handleClearInput);
 
@@ -472,7 +476,8 @@ function handleClearInput() {
 }
 
 function setStatus(type, message) {
-  if (!statusMessage) {
+  const elements = [statusMessage, statusMessageBottom].filter(Boolean);
+  if (!elements.length) {
     return;
   }
 
@@ -481,13 +486,19 @@ function setStatus(type, message) {
     statusTimeoutId = null;
   }
 
-  statusMessage.textContent = message;
-  statusMessage.className = `status-message status-${type}`;
+  elements.forEach((el) => {
+    el.textContent = message;
+    el.className = `status-message status-${type}`;
+    el.hidden = false;
+  });
 
   if (message && type !== "error") {
     statusTimeoutId = window.setTimeout(() => {
-      statusMessage.textContent = "";
-      statusMessage.className = "status-message";
+      elements.forEach((el) => {
+        el.textContent = "";
+        el.className = "status-message";
+        el.hidden = true;
+      });
       statusTimeoutId = null;
     }, 3000);
   }
