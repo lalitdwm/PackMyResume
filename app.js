@@ -42,6 +42,18 @@ const SAMPLE_FIELDS = [
   { label: "Communication Skills :", value: "4 out of 5" },
 ];
 
+const REQUIRED_LABELS = [
+  "Name as per PAN Card:",
+  "Total years of Exp:",
+  "Relevant Exp:",
+  "Mobile No:",
+  "Email ID:",
+  "Current Company:",
+  "Highest Academic Qualification:",
+  "Notice period:",
+  "Current Location:",
+];
+
 const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
 const MARGIN_X = 42;
@@ -266,6 +278,7 @@ function renderFieldColumn(container, fields) {
       currentFields = currentFields.map((entry, index) =>
         index === fieldIndex ? { ...entry, label: event.target.value } : entry
       );
+      updateRowWarningState(row, currentFields[fieldIndex]);
       syncDetailsTextFromFields();
     });
 
@@ -278,11 +291,13 @@ function renderFieldColumn(container, fields) {
       currentFields = currentFields.map((entry, index) =>
         index === fieldIndex ? { ...entry, value: event.target.value } : entry
       );
+      updateRowWarningState(row, currentFields[fieldIndex]);
       syncDetailsTextFromFields();
     });
 
     row.appendChild(labelCell);
     row.appendChild(valueCell);
+    updateRowWarningState(row, field);
     container.appendChild(row);
     resizeEditor(labelCell);
     resizeEditor(valueCell);
@@ -292,6 +307,39 @@ function renderFieldColumn(container, fields) {
 function resizeEditor(element) {
   element.style.height = "auto";
   element.style.height = `${element.scrollHeight}px`;
+}
+
+function updateRowWarningState(row, field) {
+  const normalizedLabel = normalizeCellText(field.label).toLowerCase();
+  const isRequired = REQUIRED_LABELS.some((l) => normalizeCellText(l).toLowerCase() === normalizedLabel);
+  let showWarning = false;
+
+  if (isRequired) {
+    const sampleField = SAMPLE_FIELDS.find(
+      (f) => normalizeCellText(f.label).toLowerCase() === normalizedLabel
+    );
+    if (normalizeCellText(field.value) === normalizeCellText(sampleField ? sampleField.value : "")) {
+      showWarning = true;
+    }
+  }
+
+  const existingIcon = row.querySelector(".warning-icon");
+
+  if (showWarning) {
+    row.classList.add("field-row-warning");
+    if (!existingIcon) {
+      const warningIcon = document.createElement("span");
+      warningIcon.className = "warning-icon";
+      warningIcon.title = "Required field needs to be filled";
+      warningIcon.textContent = "⚠️";
+      row.appendChild(warningIcon);
+    }
+  } else {
+    row.classList.remove("field-row-warning");
+    if (existingIcon) {
+      existingIcon.remove();
+    }
+  }
 }
 
 function syncDetailsTextFromFields() {
@@ -656,6 +704,24 @@ async function handleGeneratePdf() {
   if (!fields.length) {
     setStatus("error", "Add candidate details before generating the PDF.");
     return;
+  }
+
+  for (const reqLabel of REQUIRED_LABELS) {
+    const normalizedReqLabel = normalizeCellText(reqLabel).toLowerCase();
+    const currentField = fields.find(
+      (f) => normalizeCellText(f.label).toLowerCase() === normalizedReqLabel
+    );
+    const sampleField = SAMPLE_FIELDS.find(
+      (f) => normalizeCellText(f.label).toLowerCase() === normalizedReqLabel
+    );
+
+    if (
+      !currentField ||
+      normalizeCellText(currentField.value) === normalizeCellText(sampleField ? sampleField.value : "")
+    ) {
+      setStatus("error", `It seems you missed to fill the info: ${reqLabel.replace(/:$/, "")}`);
+      return;
+    }
   }
 
   if (!imageFile) {
