@@ -426,20 +426,27 @@ code {
   margin-top: 32px;
 }
 
-.resume-preview-title {
-  font-size: 1.1rem;
-  margin-top: 0;
-  margin-bottom: 12px;
-  color: #111827;
-}
 
-.resume-preview-frame {
+
+.resume-preview-frame-container {
   width: 100%;
   aspect-ratio: 1 / 1.414;
   border: 1px solid #e2e8f0;
   border-radius: 22px;
   background: #f8fafc;
+  overflow: hidden;
+  position: relative;
+}
+
+.resume-preview-frame {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  border: 0;
   display: block;
+  background: transparent;
 }
 
 @media (max-width: 900px) {
