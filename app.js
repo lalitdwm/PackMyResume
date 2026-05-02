@@ -86,8 +86,6 @@ let previewImage;
 let imagePlaceholder;
 let resumePreviewWrap;
 let resumePreviewFrame;
-let imageObjectUrl = "";
-let resumeObjectUrl = "";
 let currentFields = [];
 let isSyncingRichInput = false;
 let statusTimeoutId = null;
@@ -395,11 +393,6 @@ function escapeHtml(value) {
 }
 
 function handleImageChange() {
-  if (imageObjectUrl) {
-    URL.revokeObjectURL(imageObjectUrl);
-    imageObjectUrl = "";
-  }
-
   const file = imageInput.files && imageInput.files[0];
   if (!file) {
     previewImage.hidden = true;
@@ -408,10 +401,13 @@ function handleImageChange() {
     return;
   }
 
-  imageObjectUrl = URL.createObjectURL(file);
-  previewImage.src = imageObjectUrl;
-  previewImage.hidden = false;
-  imagePlaceholder.hidden = true;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    previewImage.src = e.target.result;
+    previewImage.hidden = false;
+    imagePlaceholder.hidden = true;
+  };
+  reader.readAsDataURL(file);
 }
 
 function handleFileSelectionState(event) {
@@ -431,11 +427,6 @@ function handleFileSelectionState(event) {
 function handleResumeChange(event) {
   handleFileSelectionState(event);
 
-  if (resumeObjectUrl) {
-    URL.revokeObjectURL(resumeObjectUrl);
-    resumeObjectUrl = "";
-  }
-
   const file = resumeInput.files && resumeInput.files[0];
   if (!file) {
     resumePreviewWrap.hidden = true;
@@ -443,9 +434,12 @@ function handleResumeChange(event) {
     return;
   }
 
-  resumeObjectUrl = URL.createObjectURL(file);
-  resumePreviewFrame.src = `${resumeObjectUrl}#toolbar=0&navpanes=0&scrollbar=0&view=Fit`;
-  resumePreviewWrap.hidden = false;
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    resumePreviewFrame.src = `${e.target.result}#toolbar=0&navpanes=0&scrollbar=0&view=Fit`;
+    resumePreviewWrap.hidden = false;
+  };
+  reader.readAsDataURL(file);
 }
 
 function handleClearDetails() {
@@ -652,36 +646,34 @@ async function normalizeImageForPdf(imageBytes, imageMimeType) {
   const blob = new Blob([imageBytes], {
     type: imageMimeType || "application/octet-stream",
   });
-  const objectUrl = URL.createObjectURL(blob);
+  
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 
-  try {
-    const imageElement = await loadImageElement(objectUrl);
-    const canvas = document.createElement("canvas");
-    canvas.width = imageElement.naturalWidth || imageElement.width;
-    canvas.height = imageElement.naturalHeight || imageElement.height;
+  const imageElement = await loadImageElement(dataUrl);
+  const canvas = document.createElement("canvas");
+  canvas.width = imageElement.naturalWidth || imageElement.width;
+  canvas.height = imageElement.naturalHeight || imageElement.height;
 
-    if (!canvas.width || !canvas.height) {
-      throw new Error("The selected image could not be read.");
-    }
-
-    const context = canvas.getContext("2d");
-    if (!context) {
-      throw new Error("Canvas is unavailable in this browser.");
-    }
-
-    context.drawImage(imageElement, 0, 0);
-    const pngBlob = await new Promise((resolve) => {
-      canvas.toBlob(resolve, "image/png");
-    });
-
-    if (!pngBlob) {
-      throw new Error("Unable to convert the image for PDF export.");
-    }
-
-    return pngBlob.arrayBuffer();
-  } finally {
-    URL.revokeObjectURL(objectUrl);
+  if (!canvas.width || !canvas.height) {
+    throw new Error("The selected image could not be read.");
   }
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Canvas is unavailable in this browser.");
+  }
+
+  ctx.drawImage(imageElement, 0, 0);
+
+  const pngDataUrl = canvas.toDataURL("image/png");
+  const base64Data = pngDataUrl.replace(/^data:image\/png;base64,/, "");
+
+  return Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
 }
 
 function loadImageElement(src) {
@@ -761,14 +753,19 @@ async function handleGeneratePdf() {
     });
 
     const blob = new Blob([outputBytes], { type: "application/pdf" });
-    const downloadUrl = URL.createObjectURL(blob);
+    const downloadUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+
     const anchor = document.createElement("a");
     anchor.href = downloadUrl;
     anchor.download = buildOutputName(fields);
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
-    setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
 
     setStatus("success", "PDF generated and downloaded.");
   } catch (error) {
